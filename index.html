@@ -80,6 +80,12 @@
 
     .btn-submit { width: 100%; padding: 12px; background: var(--primary-accent); color: white; border: none; border-radius: var(--radius-sm); font-weight: 700; cursor: pointer; margin-top: 8px; }
 
+    .btn-google {
+      width: 100%; padding: 12px; background: #ffffff; color: #333333; border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm); font-weight: 700; cursor: pointer; margin-top: 8px;
+      display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
     .role-selector { display: flex; gap: 10px; margin-bottom: 12px; }
     .role-btn { flex: 1; padding: 10px; border: 2px solid var(--border-color); border-radius: var(--radius-md); background: var(--bg-surface); font-weight: 700; font-size: 0.85rem; cursor: pointer; text-align: center; }
     .role-btn.active { border-color: var(--primary-accent); background: #eff6ff; color: var(--primary-accent); }
@@ -174,7 +180,6 @@
         <div class="form-group">
           <label id="lblSupportIssue">समस्या का प्रकार</label>
           <select id="supportIssueType">
-            <option value="OTP Error">OTP नहीं आ रहा</option>
             <option value="Login Error">लॉगिन की समस्या</option>
             <option value="Service Issue">सेवा से जुड़ी शिकायत</option>
             <option value="Other">अन्य सहायता</option>
@@ -201,11 +206,11 @@
     </nav>
   </div>
 
-  <!-- OTP Login Modal -->
+  <!-- Google Login Modal -->
   <div id="joinModal" class="modal-overlay">
     <div class="modal-card">
       <div style="font-weight:800; font-size:1.1rem; text-align:center;" id="modalWelcome">RUVESTRA में आपका स्वागत है</div>
-      <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:12px; text-align:center;" id="modalSub">मोबाइल नंबर सत्यापित करें:</div>
+      <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:12px; text-align:center;" id="modalSub">Google खाते से लॉगिन करें:</div>
       
       <div class="form-group" style="margin-bottom: 12px;">
         <label id="lblWhoAreYou">आप कौन हैं?</label>
@@ -216,27 +221,10 @@
       </div>
 
       <div class="service-form">
-        <div class="form-group">
-          <label id="lblUserName">आपका नाम</label>
-          <input type="text" id="userNameInput" placeholder="अपना नाम लिखें">
-        </div>
-        
-        <div class="form-group">
-          <label id="lblMobileNum">मोबाइल नंबर</label>
-          <input type="tel" id="userPhone" placeholder="10 अंकों का मोबाइल नंबर" maxlength="10">
-        </div>
-
-        <button class="btn-submit" id="btnSendOtp" onclick="sendOTP()">OTP भेजें</button>
-
-        <div id="otpSection" style="display:none; margin-top:10px;">
-          <div class="form-group">
-            <label>6-अंकों का OTP दर्ज करें</label>
-            <input type="text" id="otpInput" placeholder="OTP दर्ज करें" maxlength="6">
-          </div>
-          <button class="btn-submit" id="btnVerifyOtp" onclick="verifyOTP()" style="background:#10b981;">OTP सत्यापित करें</button>
-        </div>
-
-        <div id="recaptcha-container" style="margin-top:10px;"></div>
+        <button class="btn-google" onclick="loginWithGoogle()">
+          <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
+          Google से साइन-इन करें
+        </button>
       </div>
     </div>
   </div>
@@ -257,10 +245,7 @@
 
     firebase.initializeApp(firebaseConfig);
 
-    // एडमिन ईमेल आईडी (यहाँ सेट कर दी गई है)
     const adminEmail = "ruvestra@gmail.com"; 
-
-    let confirmationResultObj = null;
 
     if (!localStorage.getItem("ruvestra_v2_clean")) {
       localStorage.removeItem("ruvestra_services");
@@ -349,11 +334,8 @@
         navAdd: "पोस्ट करें",
         navSupport: "सहायता",
         welcome: "RUVESTRA में आपका स्वागत है",
-        sub: "मोबाइल नंबर सत्यापित करें:",
+        sub: "Google खाते से लॉगिन करें:",
         whoAreYou: "आप कौन हैं?",
-        userNameLabel: "आपका नाम",
-        userNamePlaceholder: "अपना नाम लिखें",
-        mobileNum: "मोबाइल नंबर",
         cust: "ग्राहक",
         client: "सेवा प्रदाता",
         call: "कॉल करें",
@@ -389,11 +371,8 @@
         navAdd: "Post",
         navSupport: "Support",
         welcome: "Welcome to RUVESTRA",
-        sub: "Verify your mobile number:",
+        sub: "Sign in with Google Account:",
         whoAreYou: "Who are you?",
-        userNameLabel: "Your Name",
-        userNamePlaceholder: "Enter your name",
-        mobileNum: "Mobile Number",
         cust: "Customer",
         client: "Service Provider",
         call: "Call",
@@ -422,55 +401,30 @@
       checkUserJoinStatus();
       renderServices();
       lucide.createIcons();
-
-      window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
-        'size': 'invisible'
-      });
     });
 
-    function sendOTP() {
-      const name = document.getElementById("userNameInput").value.trim();
-      const phone = document.getElementById("userPhone").value.trim();
-
-      if(!name || phone.length !== 10 || isNaN(phone)) {
-        alert("कृपया सही नाम और 10 अंकों का मोबाइल नंबर दर्ज करें।");
-        return;
-      }
-
-      const phoneNumber = "+91" + phone;
-      const appVerifier = window.recaptchaVerifier;
-
-      firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
-        .then((confirmationResult) => {
-          window.confirmationResultObj = confirmationResult;
-          document.getElementById("otpSection").style.display = "block";
-          document.getElementById("btnSendOtp").style.display = "none";
-          alert("OTP आपके मोबाइल नंबर पर भेज दिया गया है!");
-        }).catch((error) => {
-          alert("OTP भेजने में समस्या आई: " + error.message);
+    // Google Sign-In Function
+    function loginWithGoogle() {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      firebase.auth().signInWithPopup(provider)
+        .then((result) => {
+          const user = result.user;
+          activeUser = {
+            name: user.displayName || "User",
+            email: user.email,
+            photo: user.photoURL || defaultAvatar,
+            role: selectedRole,
+            phone: user.phoneNumber || ""
+          };
+          localStorage.setItem("ruvestra_joined_user", JSON.stringify(activeUser));
+          
+          checkUserJoinStatus();
+          renderServices();
+          showToast("Google से लॉगिन सफल!");
+        })
+        .catch((error) => {
+          alert("लॉगिन में समस्या आई: " + error.message);
         });
-    }
-
-    function verifyOTP() {
-      const otp = document.getElementById("otpInput").value.trim();
-      const name = document.getElementById("userNameInput").value.trim();
-      const phone = document.getElementById("userPhone").value.trim();
-
-      if(otp.length !== 6) {
-        alert("कृपया 6 अंकों का सही OTP दर्ज करें।");
-        return;
-      }
-
-      window.confirmationResultObj.confirm(otp).then((result) => {
-        activeUser = { name: name, role: selectedRole, phone: phone, photo: defaultAvatar };
-        localStorage.setItem("ruvestra_joined_user", JSON.stringify(activeUser));
-        
-        checkUserJoinStatus();
-        renderServices();
-        showToast("OTP सत्यापित हो गया! ऐप में स्वागत है।");
-      }).catch((error) => {
-        alert("गलत OTP! कृपया फिर से प्रयास करें।");
-      });
     }
 
     function submitSupportRequest() {
@@ -484,7 +438,7 @@
       }
 
       const subject = encodeURIComponent(`[RUVESTRA Help] ${issue} - ${name}`);
-      const body = encodeURIComponent(`नाम: ${name}\nफ़ोन नंबर: ${activeUser ? activeUser.phone : 'Not Logged In'}\nसमस्या प्रकार: ${issue}\n\nविवरण:\n${msg}`);
+      const body = encodeURIComponent(`नाम: ${name}\nईमेल: ${activeUser ? activeUser.email : 'Not Logged In'}\nसमस्या प्रकार: ${issue}\n\nविवरण:\n${msg}`);
 
       window.location.href = `mailto:${adminEmail}?subject=${subject}&body=${body}`;
     }
@@ -525,10 +479,6 @@
       document.getElementById("modalWelcome").innerText = t.welcome;
       document.getElementById("modalSub").innerText = t.sub;
       document.getElementById("lblWhoAreYou").innerText = t.whoAreYou;
-      document.getElementById("lblUserName").innerText = t.userNameLabel;
-      document.getElementById("userNameInput").placeholder = t.userNamePlaceholder;
-      document.getElementById("lblMobileNum").innerText = t.mobileNum;
-      document.getElementById("userPhone").placeholder = t.phonePlaceholder;
       document.getElementById("roleCustomer").innerText = t.cust;
       document.getElementById("roleClient").innerText = t.client;
       document.getElementById("lblSupportTitle").innerText = t.supportTitle;
@@ -556,14 +506,20 @@
 
     function checkUserJoinStatus() {
       const badgeText = document.getElementById("userBadgeText");
+      const badgeAvatar = document.getElementById("badgeAvatar");
+      const defaultUserIcon = document.getElementById("defaultUserIcon");
       const modal = document.getElementById("joinModal");
       const t = translations[currentLang];
 
       if (activeUser) {
         const roleLabel = activeUser.role === 'Client' ? t.client : t.cust;
-        badgeText.innerText = (activeUser.name || activeUser.phone) + " (" + roleLabel + ")";
+        badgeText.innerText = activeUser.name + " (" + roleLabel + ")";
+        if (activeUser.photo) {
+          badgeAvatar.src = activeUser.photo;
+          badgeAvatar.style.display = "inline-block";
+          if (defaultUserIcon) defaultUserIcon.style.display = "none";
+        }
         modal.style.display = "none";
-        document.getElementById("srvPhone").value = activeUser.phone;
         document.getElementById("supportNameInput").value = activeUser.name || '';
       } else {
         badgeText.innerText = t.joinApp;
@@ -624,7 +580,7 @@
         catIndex: catIndex,
         phone: phone,
         desc: desc,
-        photo: defaultAvatar
+        photo: activeUser.photo || defaultAvatar
       };
 
       services.unshift(newSrv);
