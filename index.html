@@ -90,9 +90,12 @@
     .role-btn { flex: 1; padding: 10px; border: 2px solid var(--border-color); border-radius: var(--radius-md); background: var(--bg-surface); font-weight: 700; font-size: 0.85rem; cursor: pointer; text-align: center; }
     .role-btn.active { border-color: var(--primary-accent); background: #eff6ff; color: var(--primary-accent); }
 
-    .service-card { background-color: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 14px; display: flex; flex-direction: column; gap: 10px; }
-    .card-header { display: flex; align-items: center; gap: 10px; }
+    .service-card { background-color: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 14px; display: flex; flex-direction: column; gap: 10px; position: relative; }
+    .card-header { display: flex; align-items: center; gap: 10px; justify-content: space-between; }
+    .card-user-info { display: flex; align-items: center; gap: 10px; }
     .card-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border-color); }
+    
+    .btn-delete { background: #fee2e2; color: #dc2626; border: none; padding: 6px 10px; border-radius: var(--radius-sm); font-size: 0.75rem; font-weight: 700; cursor: pointer; }
 
     .contact-actions { display: flex; gap: 8px; }
     .btn-contact { flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 8px 12px; border-radius: var(--radius-sm); font-size: 0.8rem; font-weight: 600; text-decoration: none; color: white; }
@@ -159,10 +162,7 @@
           <label id="lblSrvPhone">मोबाइल नंबर</label>
           <input type="tel" id="srvPhone" placeholder="10 अंकों का मोबाइल नंबर" maxlength="10">
         </div>
-        <div class="form-group">
-          <label id="lblSrvDesc">विवरण</label>
-          <input type="text" id="srvDesc" placeholder="सेवा या आवश्यकता का विवरण लिखें">
-        </div>
+        <!-- Description field removed successfully -->
         <button class="btn-submit" id="btnListNow" onclick="saveNewService()">अभी पोस्ट करें</button>
       </div>
     </main>
@@ -232,7 +232,6 @@
   <div id="toast" class="toast">कार्य संपन्न हुआ</div>
 
   <script>
-    // Firebase Initialization
     const firebaseConfig = {
       apiKey: "AIzaSyB3rkoLj7fe0PWzNMKRfDoXS4YHXyz0idM",
       authDomain: "ruvestra.firebaseapp.com",
@@ -247,9 +246,9 @@
 
     const adminEmail = "ruvestra@gmail.com"; 
 
-    if (!localStorage.getItem("ruvestra_v2_clean")) {
+    if (!localStorage.getItem("ruvestra_v3_clean")) {
       localStorage.removeItem("ruvestra_services");
-      localStorage.setItem("ruvestra_v2_clean", "true");
+      localStorage.setItem("ruvestra_v3_clean", "true");
     }
 
     const categoriesData = [
@@ -327,8 +326,6 @@
         srvCat: "श्रेणी चुनें",
         srvPhone: "मोबाइल नंबर",
         phonePlaceholder: "10 अंकों का मोबाइल नंबर",
-        srvDesc: "विवरण",
-        descPlaceholder: "सेवा या आवश्यकता का विवरण लिखें",
         listNow: "अभी पोस्ट करें",
         navHome: "मुख्य पृष्ठ",
         navAdd: "पोस्ट करें",
@@ -352,7 +349,8 @@
         supportName: "आपका नाम",
         supportIssue: "समस्या का प्रकार",
         supportMsg: "अपनी समस्या विस्तार से लिखें",
-        btnSupportSubmit: "शिकायत ईमेल द्वारा भेजें"
+        btnSupportSubmit: "शिकायत ईमेल द्वारा भेजें",
+        deletePost: "डिटेल हटाएं"
       },
       en: {
         joinApp: "Join App",
@@ -364,8 +362,6 @@
         srvCat: "Select Category",
         srvPhone: "Mobile Number",
         phonePlaceholder: "10-digit mobile number",
-        srvDesc: "Description",
-        descPlaceholder: "Write details of service or requirement",
         listNow: "Post Now",
         navHome: "Home",
         navAdd: "Post",
@@ -389,7 +385,8 @@
         supportName: "Your Name",
         supportIssue: "Issue Type",
         supportMsg: "Describe your issue",
-        btnSupportSubmit: "Send Complaint via Email"
+        btnSupportSubmit: "Send Complaint via Email",
+        deletePost: "Delete"
       }
     };
 
@@ -403,24 +400,43 @@
       lucide.createIcons();
     });
 
-    // Google Sign-In Function
+    // Capture User Location and Login via Google
     function loginWithGoogle() {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      
+      // Get Geolocation automatically on login
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((position) => {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+          completeLogin(lat, lon);
+        }, (error) => {
+          // If location permission denied, proceed without location
+          completeLogin(null, null);
+        });
+      } else {
+        completeLogin(null, null);
+      }
+    }
+
+    function completeLogin(lat, lon) {
       const provider = new firebase.auth.GoogleAuthProvider();
       firebase.auth().signInWithPopup(provider)
         .then((result) => {
           const user = result.user;
           activeUser = {
-            name: user.displayName || "User",
             email: user.email,
+            name: user.displayName || "User",
             photo: user.photoURL || defaultAvatar,
             role: selectedRole,
-            phone: user.phoneNumber || ""
+            latitude: lat,
+            longitude: lon
           };
           localStorage.setItem("ruvestra_joined_user", JSON.stringify(activeUser));
           
           checkUserJoinStatus();
           renderServices();
-          showToast("Google से लॉगिन सफल!");
+          showToast("Google से लॉगिन और लोकेशन सेट सफल!");
         })
         .catch((error) => {
           alert("लॉगिन में समस्या आई: " + error.message);
@@ -470,8 +486,6 @@
       document.getElementById("lblSrvCat").innerText = t.srvCat;
       document.getElementById("lblSrvPhone").innerText = t.srvPhone;
       document.getElementById("srvPhone").placeholder = t.phonePlaceholder;
-      document.getElementById("lblSrvDesc").innerText = t.srvDesc;
-      document.getElementById("srvDesc").placeholder = t.descPlaceholder;
       document.getElementById("btnListNow").innerText = t.listNow;
       document.getElementById("navHomeText").innerText = t.navHome;
       document.getElementById("navAddText").innerText = t.navAdd;
@@ -565,7 +579,6 @@
       const title = document.getElementById("srvTitle").value.trim();
       const catIndex = parseInt(document.getElementById("srvCategory").value);
       const phone = document.getElementById("srvPhone").value.trim();
-      const desc = document.getElementById("srvDesc").value.trim();
 
       if(!title || phone.length < 10) {
         alert(t.toastFillAll);
@@ -574,13 +587,15 @@
 
       const newSrv = {
         id: Date.now().toString(),
+        userEmail: activeUser.email,
         userName: activeUser.name,
         role: activeUser.role,
         name: title,
         catIndex: catIndex,
         phone: phone,
-        desc: desc,
-        photo: activeUser.photo || defaultAvatar
+        photo: activeUser.photo || defaultAvatar,
+        latitude: activeUser.latitude || null,
+        longitude: activeUser.longitude || null
       };
 
       services.unshift(newSrv);
@@ -589,6 +604,21 @@
       renderServices();
       switchTab('home');
       showToast(t.toastPosted);
+    }
+
+    // Delete Post Logic (Only owner can delete)
+    function deletePost(postId, postUserEmail) {
+      if (!activeUser || activeUser.email !== postUserEmail) {
+        alert("आप केवल अपनी खुद की पोस्ट डिलीट कर सकते हैं!");
+        return;
+      }
+
+      if (confirm("क्या आप वाकई इस पोस्ट को हटाना चाहते हैं?")) {
+        services = services.filter(s => s.id !== postId);
+        localStorage.setItem("ruvestra_services", JSON.stringify(services));
+        renderServices();
+        showToast("पोस्ट सफलतापूर्वक हटा दी गई!");
+      }
     }
 
     function handleSearch() {
@@ -608,7 +638,6 @@
         filtered = filtered.filter(s => {
           const categoryName = categoriesData[s.catIndex] ? categoriesData[s.catIndex][currentLang].toLowerCase() : "";
           return s.name.toLowerCase().includes(searchQuery) || 
-                 s.desc.toLowerCase().includes(searchQuery) ||
                  categoryName.includes(searchQuery) ||
                  (s.userName && s.userName.toLowerCase().includes(searchQuery)) ||
                  s.phone.includes(searchQuery);
@@ -624,20 +653,26 @@
         const catObj = categoriesData[s.catIndex] || categoriesData[1];
         const categoryLabel = catObj[currentLang];
         const roleLabel = s.role === 'Client' ? t.providerRole : t.customerRole;
+        
+        // Check if current logged-in user is the owner of this post
+        const isOwner = activeUser && activeUser.email === s.userEmail;
 
         return `
           <div class="service-card">
             <div class="card-header">
-              <img src="${s.photo || defaultAvatar}" class="card-avatar" />
-              <div>
-                <div style="font-size:0.8rem; font-weight:800; color:var(--text-main);">${s.userName || 'User'}</div>
-                <div style="font-size:0.7rem; font-weight:700; color:var(--primary-accent);">${categoryLabel} • ${roleLabel}</div>
+              <div class="card-user-info">
+                <img src="${s.photo || defaultAvatar}" class="card-avatar" />
+                <div>
+                  <div style="font-size:0.8rem; font-weight:800; color:var(--text-main);">${s.userName || 'User'}</div>
+                  <div style="font-size:0.7rem; font-weight:700; color:var(--primary-accent);">${categoryLabel} • ${roleLabel}</div>
+                </div>
               </div>
+              ${isOwner ? `<button class="btn-delete" onclick="deletePost('${s.id}', '${s.userEmail}')">${t.deletePost}</button>` : ''}
             </div>
-            <div style="font-weight:700; font-size:1rem;">${s.name}</div>
-            <div style="font-size:0.8rem; color:var(--text-muted);">${s.desc}</div>
             
-            <div class="contact-actions">
+            <div style="font-weight:700; font-size:1rem; margin-top: 4px;">${s.name}</div>
+            
+            <div class="contact-actions" style="margin-top: 6px;">
               <a href="tel:${s.phone}" class="btn-contact btn-call">
                 <i data-lucide="phone" style="width:14px;"></i> ${t.call} (${s.phone})
               </a>
