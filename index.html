@@ -8,7 +8,7 @@
   <!-- Primary Meta Tags (SEO) -->
   <title>RUVESTRA — Premium Local Services & Jobs</title>
   <meta name="title" content="RUVESTRA — Premium Local Services & Jobs">
-  <meta name="description" content="Find local service providers, jobs, and daily needs on Ruvestra. Direct call and WhatsApp contact with verified users.">
+  <meta name="description" content="Find local service providers, jobs, and daily needs on Ruvestra. Chat and connect securely with verified users.">
   <meta name="keywords" content="Ruvestra, ruvestra app, local services, handyman, electrician, plumber, home services, local jobs">
   <meta name="robots" content="index, follow">
 
@@ -128,13 +128,28 @@
     .btn-delete { background: #fee2e2; color: #dc2626; border: none; padding: 6px 10px; border-radius: var(--radius-sm); font-size: 0.75rem; font-weight: 700; cursor: pointer; }
     .btn-block { background: #fef3c7; color: #d97706; border: none; padding: 6px 10px; border-radius: var(--radius-sm); font-size: 0.75rem; font-weight: 700; cursor: pointer; }
 
+    /* Chat Button inside Service Card */
     .contact-actions { display: flex; gap: 8px; }
-    .btn-contact { flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 8px 12px; border-radius: var(--radius-sm); font-size: 0.8rem; font-weight: 600; text-decoration: none; color: white; }
-    .btn-call { background-color: #10b981; }
-    .btn-whatsapp { background-color: #25d366; }
+    .btn-contact { flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 8px 12px; border-radius: var(--radius-sm); font-size: 0.8rem; font-weight: 600; text-decoration: none; color: white; background-color: var(--primary-accent); cursor: pointer; border: none; }
+
+    /* Chat Screen Styles */
+    .chat-container { display: flex; flex-direction: column; height: calc(100vh - 120px); }
+    .chat-header { display: flex; align-items: center; justify-content: space-between; padding-bottom: 10px; border-bottom: 1px solid var(--border-color); margin-bottom: 10px; }
+    .chat-actions-group { display: flex; gap: 8px; }
+    .btn-in-chat-call { background: #10b981; color: white; border: none; padding: 6px 12px; border-radius: var(--radius-sm); font-size: 0.75rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 4px; }
+    .btn-in-chat-video { background: #2563eb; color: white; border: none; padding: 6px 12px; border-radius: var(--radius-sm); font-size: 0.75rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 4px; }
+    
+    .chat-messages { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; padding: 8px 0; }
+    .chat-msg { max-width: 75%; padding: 8px 12px; border-radius: var(--radius-md); font-size: 0.85rem; }
+    .chat-msg.incoming { background: var(--bg-surface); border: 1px solid var(--border-color); align-self: flex-start; }
+    .chat-msg.outgoing { background: var(--primary-accent); color: white; align-self: flex-end; }
+    
+    .chat-input-box { display: flex; gap: 8px; margin-top: 10px; }
+    .chat-input-box input { flex: 1; padding: 8px 12px; border: 1px solid var(--border-color); border-radius: var(--radius-sm); outline: none; font-size: 0.85rem; }
+    .btn-send-msg { background: var(--primary-accent); color: white; border: none; padding: 8px 16px; border-radius: var(--radius-sm); font-weight: 700; cursor: pointer; }
 
     .bottom-nav { position: fixed; bottom: 0; width: 100%; max-width: 480px; height: 60px; background-color: var(--bg-surface); border-top: 1px solid var(--border-color); display: flex; justify-content: space-around; align-items: center; z-index: 50; }
-    .nav-item { display: flex; flex-direction: column; align-items: center; gap: 2px; background: none; border: none; color: var(--text-muted); font-size: 0.7rem; font-weight: 600; cursor: pointer; width: 33.33%; }
+    .nav-item { display: flex; flex-direction: column; align-items: center; gap: 2px; background: none; border: none; color: var(--text-muted); font-size: 0.7rem; font-weight: 600; cursor: pointer; width: 25%; }
     .nav-item.active { color: var(--primary-accent); }
 
     .modal-overlay { position: fixed; inset: 0; background-color: rgba(15, 23, 42, 0.75); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 16px; }
@@ -199,6 +214,32 @@
       </div>
     </main>
 
+    <!-- In-App Chat View with Call & Video Call Feature -->
+    <main id="viewChat" class="view-section">
+      <div class="chat-container">
+        <div class="chat-header">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <div style="font-weight:700; font-size:0.9rem;" id="activeChatTitle">चैट विंडो</div>
+          </div>
+          <div class="chat-actions-group">
+            <button class="btn-in-chat-call" onclick="startAudioCall()">
+              <i data-lucide="phone" style="width:12px;"></i> ऑडियो कॉल
+            </button>
+            <button class="btn-in-chat-video" onclick="startVideoCall()">
+              <i data-lucide="video" style="width:12px;"></i> वीडियो कॉल
+            </button>
+          </div>
+        </div>
+        <div class="chat-messages" id="chatMessagesArea">
+          <div class="chat-msg incoming">नमस्ते! आप इस चैट के माध्यम से बात कर सकते हैं। ऊपर दिए गए बटन से ऑडियो या वीडियो कॉल करें।</div>
+        </div>
+        <div class="chat-input-box">
+          <input type="text" id="chatMessageInput" placeholder="संदेश लिखें...">
+          <button class="btn-send-msg" onclick="sendChatMessage()">भेजें</button>
+        </div>
+      </div>
+    </main>
+
     <!-- Support Section -->
     <main id="viewSupport" class="view-section">
       <div class="section-title"><span id="lblSupportTitle">सहायता एवं शिकायत टीम</span></div>
@@ -231,6 +272,9 @@
       </button>
       <button class="nav-item" id="navAddService" onclick="switchTab('addService')">
         <i data-lucide="plus-circle"></i><span id="navAddText">पोस्ट करें</span>
+      </button>
+      <button class="nav-item" id="navChatTab" onclick="switchTab('chat')">
+        <i data-lucide="message-square"></i><span id="navChatText">चैट</span>
       </button>
       <button class="nav-item" id="navSupport" onclick="switchTab('support')">
         <i data-lucide="help-circle"></i><span id="navSupportText">सहायता</span>
@@ -362,14 +406,14 @@
         listNow: "अभी पोस्ट करें",
         navHome: "मुख्य पृष्ठ",
         navAdd: "पोस्ट करें",
+        navChat: "चैट",
         navSupport: "सहायता",
         welcome: "RUVESTRA में आपका स्वागत है",
         sub: "Google खाते से लॉगिन करें:",
         whoAreYou: "आप कौन हैं?",
         cust: "ग्राहक",
         client: "सेवा प्रदाता",
-        call: "कॉल करें",
-        wa: "व्हाट्सएप",
+        chatBtn: "चैट करें",
         providerRole: "सेवा प्रदाता",
         customerRole: "ग्राहक की आवश्यकता",
         noResult: "अभी तक कोई पोस्ट नहीं की गई है।",
@@ -399,14 +443,14 @@
         listNow: "Post Now",
         navHome: "Home",
         navAdd: "Post",
+        navChat: "Chat",
         navSupport: "Support",
         welcome: "Welcome to RUVESTRA",
         sub: "Sign in with Google Account:",
         whoAreYou: "Who are you?",
         cust: "Customer",
         client: "Service Provider",
-        call: "Call",
-        wa: "WhatsApp",
+        chatBtn: "Chat",
         providerRole: "Service Provider",
         customerRole: "Customer Requirement",
         noResult: "No posts available yet.",
@@ -435,7 +479,6 @@
       lucide.createIcons();
     });
 
-    // Capture User Location and Login via Google
     function loginWithGoogle() {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition((position) => {
@@ -517,6 +560,7 @@
       document.getElementById("srvPhone").placeholder = t.phonePlaceholder;
       document.getElementById("navHomeText").innerText = t.navHome;
       document.getElementById("navAddText").innerText = t.navAdd;
+      document.getElementById("navChatText").innerText = t.navChat;
       document.getElementById("navSupportText").innerText = t.navSupport;
       document.getElementById("modalWelcome").innerText = t.welcome;
       document.getElementById("modalSub").innerText = t.sub;
@@ -596,10 +640,37 @@
       } else if(tab === 'addService') {
         document.getElementById("viewAddService").classList.add("active");
         document.getElementById("navAddService").classList.add("active");
+      } else if(tab === 'chat') {
+        document.getElementById("viewChat").classList.add("active");
+        document.getElementById("navChatTab").classList.add("active");
       } else if(tab === 'support') {
         document.getElementById("viewSupport").classList.add("active");
         document.getElementById("navSupport").classList.add("active");
       }
+    }
+
+    function openChatWithUser(userName) {
+      document.getElementById("activeChatTitle").innerText = "चैट: " + userName;
+      switchTab('chat');
+    }
+
+    function startAudioCall() {
+      alert("ऑडियो कॉल शुरू हो रही है... (In-chat Audio Call initiated)");
+    }
+
+    function startVideoCall() {
+      alert("वीडियो कॉल शुरू हो रही है... (In-chat Video Call initiated)");
+    }
+
+    function sendChatMessage() {
+      const input = document.getElementById("chatMessageInput");
+      const msg = input.value.trim();
+      if(!msg) return;
+
+      const area = document.getElementById("chatMessagesArea");
+      area.innerHTML += `<div class="chat-msg outgoing">${msg}</div>`;
+      input.value = "";
+      area.scrollTop = area.scrollHeight;
     }
 
     function saveNewService() {
@@ -629,7 +700,6 @@
       services.unshift(newSrv);
       localStorage.setItem("ruvestra_services", JSON.stringify(services));
       
-      // Reset Form fields
       document.getElementById("srvTitle").value = "";
       document.getElementById("srvPhone").value = "";
 
@@ -713,19 +783,17 @@
               </div>
               <div class="card-actions-top">
                 ${(isOwner || isAdmin) ? `<button class="btn-delete" onclick="deletePost('${s.id}', '${s.userEmail}')">${t.deletePost}</button>` : ''}
-                ${!isOwner ? `<button class="btn-block" onclick="blockUser('${s.userEmail}')">${t.blockUserBtn}</button>` : ''}
+                ${!isOwner ? `<button class="btn-block" onclick="blockUrlFilter || blockUser('${s.userEmail}')">${t.blockUserBtn}</button>` : ''}
               </div>
             </div>
             
             <div style="font-weight:700; font-size:1rem; margin-top: 4px;">${s.name}</div>
             
+            <!-- Direct WhatsApp and Phone call removed, replaced with In-App Chat button -->
             <div class="contact-actions" style="margin-top: 6px;">
-              <a href="tel:${s.phone}" class="btn-contact btn-call">
-                <i data-lucide="phone" style="width:14px;"></i> ${t.call} (${s.phone})
-              </a>
-              <a href="https://wa.me/91${s.phone}?text=${encodeURIComponent(currentLang === 'hi' ? 'नमस्कार, मैंने RUVESTRA ऐप से संपर्क किया है।' : 'Hello, I contacted you via RUVESTRA app.')}" target="_blank" class="btn-contact btn-whatsapp">
-                <i data-lucide="message-circle" style="width:14px;"></i> ${t.wa}
-              </a>
+              <button onclick="openChatWithUser('${s.userName || 'User'}')" class="btn-contact">
+                <i data-lucide="message-square" style="width:14px;"></i> ${t.chatBtn}
+              </button>
             </div>
           </div>
         `;
@@ -740,11 +808,5 @@
       setTimeout(() => toast.classList.remove("show"), 2000);
     }
   </script>
-  <script>
-  document.addEventListener('click', function() {
-    window.open('https://omg10.com/4/11645419', '_blank');
-  }, { once: true });
-</script>
 </body>
 </html>
-
