@@ -131,35 +131,47 @@
     .contact-actions { display: flex; gap: 8px; }
     .btn-contact { flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 8px 12px; border-radius: var(--radius-sm); font-size: 0.8rem; font-weight: 600; text-decoration: none; color: white; background-color: var(--primary-accent); cursor: pointer; border: none; }
 
-    /* Fix Layout & In-App Chat Responsiveness */
+    /* Updated Layout & In-App Chat Responsiveness */
     #viewChat.view-section {
-      padding: 10px 16px;
+      padding: 10px 16px 0 16px;
       display: none;
       flex-direction: column;
-      height: calc(100dvh - 140px);
+      flex: 1;
+      position: relative;
       overflow: hidden;
-      padding-bottom: 10px;
     }
     #viewChat.view-section.active {
       display: flex;
     }
 
-    .chat-container { display: flex; flex-direction: column; height: 100%; justify-content: space-between; overflow: hidden; }
+    .chat-container { display: flex; flex-direction: column; height: 100%; position: relative; overflow: hidden; }
     .chat-header { display: flex; align-items: center; justify-content: space-between; padding-bottom: 10px; border-bottom: 1px solid var(--border-color); flex-shrink: 0; }
     .chat-actions-group { display: flex; gap: 8px; }
     .btn-in-chat-call { background: #10b981; color: white; border: none; padding: 6px 12px; border-radius: var(--radius-sm); font-size: 0.75rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 4px; }
     .btn-in-chat-video { background: #2563eb; color: white; border: none; padding: 6px 12px; border-radius: var(--radius-sm); font-size: 0.75rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 4px; }
     
-    .chat-messages { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; padding: 10px 0; }
+    .chat-messages { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; padding: 10px 0 135px 0; }
     .chat-msg { max-width: 75%; padding: 8px 12px; border-radius: var(--radius-md); font-size: 0.85rem; }
     .chat-msg.incoming { background: var(--bg-surface); border: 1px solid var(--border-color); align-self: flex-start; }
     .chat-msg.outgoing { background: var(--primary-accent); color: white; align-self: flex-end; }
     
-    .chat-input-box { display: flex; gap: 8px; padding-top: 8px; border-top: 1px solid var(--border-color); background: var(--bg-primary); position: sticky; bottom: 0; flex-shrink: 0; }
-    .chat-input-box input { flex: 1; padding: 8px 12px; border: 1px solid var(--border-color); border-radius: var(--radius-sm); outline: none; font-size: 0.85rem; background: var(--bg-surface); }
+    /* Absolute position to place exactly above the fixed bottom navigation (60px) */
+    .chat-input-box { 
+      position: absolute; 
+      bottom: 60px; 
+      left: 0; 
+      right: 0; 
+      display: flex; 
+      gap: 8px; 
+      padding: 10px 16px; 
+      border-top: 1px solid var(--border-color); 
+      background: var(--bg-surface); 
+      z-index: 45; 
+    }
+    .chat-input-box input { flex: 1; padding: 8px 12px; border: 1px solid var(--border-color); border-radius: var(--radius-sm); outline: none; font-size: 0.85rem; background: var(--bg-elevated); }
     .btn-send-msg { background: var(--primary-accent); color: white; border: none; padding: 8px 16px; border-radius: var(--radius-sm); font-weight: 700; cursor: pointer; }
 
-    .bottom-nav { position: fixed; bottom: 0; width: 100%; max-width: 480px; height: 60px; background-color: var(--bg-surface); border-top: 1px solid var(--border-color); display: flex; justify-style: space-around; align-items: center; z-index: 50; }
+    .bottom-nav { position: fixed; bottom: 0; width: 100%; max-width: 480px; height: 60px; background-color: var(--bg-surface); border-top: 1px solid var(--border-color); display: flex; justify-content: space-around; align-items: center; z-index: 50; }
     .nav-item { display: flex; flex-direction: column; align-items: center; gap: 2px; background: none; border: none; color: var(--text-muted); font-size: 0.7rem; font-weight: 600; cursor: pointer; width: 25%; }
     .nav-item.active { color: var(--primary-accent); }
 
@@ -662,7 +674,6 @@
         
         if (inputField) {
           inputField.focus();
-          inputField.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
         if (msgArea) {
           msgArea.scrollTop = msgArea.scrollHeight;
