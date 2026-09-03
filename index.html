@@ -128,11 +128,9 @@
     .btn-delete { background: #fee2e2; color: #dc2626; border: none; padding: 6px 10px; border-radius: var(--radius-sm); font-size: 0.75rem; font-weight: 700; cursor: pointer; }
     .btn-block { background: #fef3c7; color: #d97706; border: none; padding: 6px 10px; border-radius: var(--radius-sm); font-size: 0.75rem; font-weight: 700; cursor: pointer; }
 
-    /* Chat Button inside Service Card */
     .contact-actions { display: flex; gap: 8px; }
     .btn-contact { flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 8px 12px; border-radius: var(--radius-sm); font-size: 0.8rem; font-weight: 600; text-decoration: none; color: white; background-color: var(--primary-accent); cursor: pointer; border: none; }
 
-    /* Chat Screen Styles */
     .chat-container { display: flex; flex-direction: column; height: calc(100vh - 120px); }
     .chat-header { display: flex; align-items: center; justify-content: space-between; padding-bottom: 10px; border-bottom: 1px solid var(--border-color); margin-bottom: 10px; }
     .chat-actions-group { display: flex; gap: 8px; }
@@ -205,10 +203,7 @@
           <select id="srvCategory"></select>
         </div>
         
-        <div class="form-group">
-          <label id="lblSrvPhone">मोबाइल नंबर (संपर्क के लिए)</label>
-          <input type="tel" id="srvPhone" placeholder="10 अंकों का मोबाइल नंबर" maxlength="10">
-        </div>
+        <!-- Mobile Number Field Completely Removed -->
 
         <button class="btn-submit" id="btnListNow" onclick="saveNewService()">अभी पोस्ट करें</button>
       </div>
@@ -401,8 +396,6 @@
         srvTitle: "शीर्षक / सेवा का नाम",
         titlePlaceholder: "उदाहरण: बिजली मिस्त्री / एसी मरम्मत",
         srvCat: "श्रेणी चुनें",
-        srvPhone: "मोबाइल नंबर",
-        phonePlaceholder: "10 अंकों का मोबाइल नंबर",
         listNow: "अभी पोस्ट करें",
         navHome: "मुख्य पृष्ठ",
         navAdd: "पोस्ट करें",
@@ -418,7 +411,7 @@
         customerRole: "ग्राहक की आवश्यकता",
         noResult: "अभी तक कोई पोस्ट नहीं की गई है।",
         toastJoined: "सफलतापूर्वक जुड़ गए!",
-        toastFillAll: "कृपया सभी विवरण सही से भरें।",
+        toastFillAll: "कृपया शीर्षक (Title) सही से भरें।",
         toastPosted: "सफलतापूर्वक पोस्ट किया गया!",
         toastJoinFirst: "कृपया पहले ऐप में जुड़ें!",
         supportTitle: "सहायता एवं शिकायत टीम",
@@ -438,8 +431,6 @@
         srvTitle: "Title / Service Name",
         titlePlaceholder: "e.g. Electrician / AC Repairing",
         srvCat: "Select Category",
-        srvPhone: "Mobile Number",
-        phonePlaceholder: "10-digit mobile number",
         listNow: "Post Now",
         navHome: "Home",
         navAdd: "Post",
@@ -455,7 +446,7 @@
         customerRole: "Customer Requirement",
         noResult: "No posts available yet.",
         toastJoined: "Joined Successfully!",
-        toastFillAll: "Please fill all details correctly.",
+        toastFillAll: "Please fill the title correctly.",
         toastPosted: "Posted Successfully!",
         toastJoinFirst: "Please join the app first!",
         supportTitle: "Help & Support Team",
@@ -556,8 +547,6 @@
       document.getElementById("lblSrvTitle").innerText = t.srvTitle;
       document.getElementById("srvTitle").placeholder = t.titlePlaceholder;
       document.getElementById("lblSrvCat").innerText = t.srvCat;
-      document.getElementById("lblSrvPhone").innerText = t.srvPhone;
-      document.getElementById("srvPhone").placeholder = t.phonePlaceholder;
       document.getElementById("navHomeText").innerText = t.navHome;
       document.getElementById("navAddText").innerText = t.navAdd;
       document.getElementById("navChatText").innerText = t.navChat;
@@ -677,9 +666,8 @@
       const t = translations[currentLang];
       const title = document.getElementById("srvTitle").value.trim();
       const catIndex = parseInt(document.getElementById("srvCategory").value);
-      const phone = document.getElementById("srvPhone").value.trim();
 
-      if(!title || phone.length < 10) {
+      if(!title) {
         alert(t.toastFillAll);
         return;
       }
@@ -691,7 +679,7 @@
         role: activeUser.role,
         name: title,
         catIndex: catIndex,
-        phone: phone,
+        phone: "9999999999", // Default dummy since phone input is removed
         photo: activeUser.photo || defaultAvatar,
         latitude: activeUser.latitude || null,
         longitude: activeUser.longitude || null
@@ -701,7 +689,6 @@
       localStorage.setItem("ruvestra_services", JSON.stringify(services));
       
       document.getElementById("srvTitle").value = "";
-      document.getElementById("srvPhone").value = "";
 
       renderServices();
       switchTab('home');
@@ -753,8 +740,7 @@
           const categoryName = categoriesData[s.catIndex] ? categoriesData[s.catIndex][currentLang].toLowerCase() : "";
           return s.name.toLowerCase().includes(searchQuery) || 
                  categoryName.includes(searchQuery) ||
-                 (s.userName && s.userName.toLowerCase().includes(searchQuery)) ||
-                 s.phone.includes(searchQuery);
+                 (s.userName && s.userName.toLowerCase().includes(searchQuery));
         });
       }
 
@@ -783,13 +769,12 @@
               </div>
               <div class="card-actions-top">
                 ${(isOwner || isAdmin) ? `<button class="btn-delete" onclick="deletePost('${s.id}', '${s.userEmail}')">${t.deletePost}</button>` : ''}
-                ${!isOwner ? `<button class="btn-block" onclick="blockUrlFilter || blockUser('${s.userEmail}')">${t.blockUserBtn}</button>` : ''}
+                ${!isOwner ? `<button class="btn-block" onclick="blockUser('${s.userEmail}')">${t.blockUserBtn}</button>` : ''}
               </div>
             </div>
             
             <div style="font-weight:700; font-size:1rem; margin-top: 4px;">${s.name}</div>
             
-            <!-- Direct WhatsApp and Phone call removed, replaced with In-App Chat button -->
             <div class="contact-actions" style="margin-top: 6px;">
               <button onclick="openChatWithUser('${s.userName || 'User'}')" class="btn-contact">
                 <i data-lucide="message-square" style="width:14px;"></i> ${t.chatBtn}
