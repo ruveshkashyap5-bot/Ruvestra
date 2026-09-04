@@ -5,40 +5,32 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <!-- Primary Meta Tags (SEO) -->
   <title>RUVESTRA — Premium Local Services & Jobs</title>
   <meta name="title" content="RUVESTRA — Premium Local Services & Jobs">
   <meta name="description" content="Find local service providers, jobs, and daily needs on Ruvestra. Chat and connect securely with verified users.">
   <meta name="keywords" content="Ruvestra, ruvestra app, local services, handyman, electrician, plumber, home services, local jobs">
   <meta name="robots" content="index, follow">
 
-  <!-- Google Search Console Verification -->
   <meta name="google-site-verification" content="fIHlw1UflJy0tG6ipeutXDAUIu0SGWwosVSeygWqgDE" />
-  
-  <!-- Canonical Link -->
   <link rel="canonical" href="https://ruveshkashyap5-bot.github.io/Ruvestra/">
 
-  <!-- Open Graph / WhatsApp / Facebook / LinkedIn Link Preview -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://ruveshkashyap5-bot.github.io/Ruvestra/">
   <meta property="og:title" content="RUVESTRA — Premium Local Services">
   <meta property="og:description" content="Connect directly with local customers and service providers for free on Ruvestra.">
   <meta property="og:image" content="https://ruveshkashyap5-bot.github.io/Ruvestra/icon.png">
 
-  <!-- Twitter Share Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:url" content="https://ruveshkashyap5-bot.github.io/Ruvestra/">
   <meta name="twitter:title" content="RUVESTRA — Premium Local Services">
   <meta name="twitter:description" content="Connect directly with local customers and service providers for free on Ruvestra.">
   <meta name="twitter:image" content="https://ruveshkashyap5-bot.github.io/Ruvestra/icon.png">
 
-  <!-- Fonts & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/lucide@latest"></script>
 
-  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 
@@ -131,7 +123,6 @@
     .contact-actions { display: flex; gap: 8px; }
     .btn-contact { flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 8px 12px; border-radius: var(--radius-sm); font-size: 0.8rem; font-weight: 600; text-decoration: none; color: white; background-color: var(--primary-accent); cursor: pointer; border: none; }
 
-    /* Updated Layout & In-App Chat Responsiveness */
     #viewChat.view-section {
       padding: 10px 16px 0 16px;
       display: none;
@@ -140,9 +131,7 @@
       position: relative;
       overflow: hidden;
     }
-    #viewChat.view-section.active {
-      display: flex;
-    }
+    #viewChat.view-section.active { display: flex; }
 
     .chat-container { display: flex; flex-direction: column; height: 100%; position: relative; overflow: hidden; }
     .chat-header { display: flex; align-items: center; justify-content: space-between; padding-bottom: 10px; border-bottom: 1px solid var(--border-color); flex-shrink: 0; }
@@ -155,7 +144,6 @@
     .chat-msg.incoming { background: var(--bg-surface); border: 1px solid var(--border-color); align-self: flex-start; }
     .chat-msg.outgoing { background: var(--primary-accent); color: white; align-self: flex-end; }
     
-    /* Absolute position to place exactly above the fixed bottom navigation (60px) */
     .chat-input-box { 
       position: absolute; 
       bottom: 60px; 
@@ -196,14 +184,14 @@
           <button id="userBadge" class="user-badge" onclick="openJoinModal()">
             <i data-lucide="user" id="defaultUserIcon" style="width:14px;"></i>
             <img id="badgeAvatar" class="user-avatar" style="display:none;" />
-            <span id="userBadgeText">ऐप में जुड़ें</span>
+            <span id="userBadgeText"></span>
           </button>
         </div>
       </div>
 
       <div class="search-box">
         <i data-lucide="search" style="width:16px; color:var(--text-muted);"></i>
-        <input type="text" id="searchInput" placeholder="सेवा, नाम या नंबर खोजें..." oninput="handleSearch()">
+        <input type="text" id="searchInput" oninput="handleSearch()">
       </div>
 
       <div class="category-bar" id="categoryFilterBar"></div>
@@ -211,121 +199,116 @@
 
     <main id="viewHome" class="view-section active">
       <div class="section-title">
-        <span id="lblAvailableSrv">उपलब्ध सेवाएं / आवश्यकताएं</span>
+        <span id="lblAvailableSrv"></span>
       </div>
       <div id="servicesList" style="display:flex; flex-direction:column; gap:12px;"></div>
     </main>
 
     <main id="viewAddService" class="view-section">
-      <div class="section-title"><span id="lblRegSrv">सेवा या आवश्यकता दर्ज करें</span></div>
+      <div class="section-title"><span id="lblRegSrv"></span></div>
       <div class="service-form">
         <div class="form-group">
-          <label id="lblSrvTitle">शीर्षक / सेवा का नाम</label>
-          <input type="text" id="srvTitle" placeholder="उदाहरण: बिजली मिस्त्री / एसी मरम्मत">
+          <label id="lblSrvTitle"></label>
+          <input type="text" id="srvTitle">
         </div>
         <div class="form-group">
-          <label id="lblSrvCat">श्रेणी चुनें</label>
+          <label id="lblSrvCat"></label>
           <select id="srvCategory"></select>
         </div>
-        
-        <!-- Mobile Number Field Completely Removed -->
 
-        <button class="btn-submit" id="btnListNow" onclick="saveNewService()">अभी पोस्ट करें</button>
+        <button class="btn-submit" id="btnListNow" onclick="saveNewService()"></button>
       </div>
     </main>
 
-    <!-- In-App Chat View with Call & Video Call Feature -->
     <main id="viewChat" class="view-section">
       <div class="chat-container">
         <div class="chat-header">
           <div style="display:flex; align-items:center; gap:8px;">
-            <div style="font-weight:700; font-size:0.9rem;" id="activeChatTitle">चैट विंडो</div>
+            <div style="font-weight:700; font-size:0.9rem;" id="activeChatTitle"></div>
           </div>
           <div class="chat-actions-group">
             <button class="btn-in-chat-call" onclick="startAudioCall()">
-              <i data-lucide="phone" style="width:12px;"></i> ऑडियो कॉल
+              <i data-lucide="phone" style="width:12px;"></i> <span id="lblAudioCall"></span>
             </button>
             <button class="btn-in-chat-video" onclick="startVideoCall()">
-              <i data-lucide="video" style="width:12px;"></i> वीडियो कॉल
+              <i data-lucide="video" style="width:12px;"></i> <span id="lblVideoCall"></span>
             </button>
           </div>
         </div>
         <div class="chat-messages" id="chatMessagesArea">
-          <div class="chat-msg incoming">नमस्ते! आप इस चैट के माध्यम से बात कर सकते हैं। ऊपर दिए गए बटन से ऑडियो या वीडियो कॉल करें।</div>
+          <div class="chat-msg incoming" id="chatWelcomeMsg"></div>
         </div>
         <div class="chat-input-box">
-          <input type="text" id="chatMessageInput" placeholder="संदेश लिखें...">
-          <button class="btn-send-msg" onclick="sendChatMessage()">भेजें</button>
+          <input type="text" id="chatMessageInput">
+          <button class="btn-send-msg" id="btnSendMsg" onclick="sendChatMessage()"></button>
         </div>
       </div>
     </main>
 
-    <!-- Support Section -->
     <main id="viewSupport" class="view-section">
-      <div class="section-title"><span id="lblSupportTitle">सहायता एवं शिकायत टीम</span></div>
+      <div class="section-title"><span id="lblSupportTitle"></span></div>
       <div class="service-form" style="background: var(--bg-surface); padding: 16px; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
-        <p style="font-size: 0.8rem; color: var(--text-muted);" id="lblSupportDesc">आपको ऐप या सेवा से सम्बंधित कोई भी समस्या है, तो हमें नीचे लिखकर भेजें।</p>
+        <p style="font-size: 0.8rem; color: var(--text-muted);" id="lblSupportDesc"></p>
         
         <div class="form-group">
-          <label id="lblSupportName">आपका नाम</label>
-          <input type="text" id="supportNameInput" placeholder="अपना नाम लिखें">
+          <label id="lblSupportName"></label>
+          <input type="text" id="supportNameInput">
         </div>
         <div class="form-group">
-          <label id="lblSupportIssue">समस्या का प्रकार</label>
+          <label id="lblSupportIssue"></label>
           <select id="supportIssueType">
-            <option value="Login Error">लॉगिन की समस्या</option>
-            <option value="Service Issue">सेवा से जुड़ी शिकायत</option>
-            <option value="Other">अन्य सहायता</option>
+            <option value="Login Error" id="optLoginError"></option>
+            <option value="Service Issue" id="optServiceIssue"></option>
+            <option value="Other" id="optOtherIssue"></option>
           </select>
         </div>
         <div class="form-group">
-          <label id="lblSupportMsg">अपनी समस्या विस्तार से लिखें</label>
-          <textarea id="supportMsgInput" rows="4" placeholder="यहाँ अपनी शिकायत या सुझाव लिखें..."></textarea>
+          <label id="lblSupportMsg"></label>
+          <textarea id="supportMsgInput" rows="4"></textarea>
         </div>
-        <button class="btn-submit" id="btnSubmitSupport" onclick="submitSupportRequest()">शिकायत ईमेल द्वारा भेजें</button>
+        <button class="btn-submit" id="btnSubmitSupport" onclick="submitSupportRequest()"></button>
       </div>
     </main>
 
     <nav class="bottom-nav">
       <button class="nav-item active" id="navHome" onclick="switchTab('home')">
-        <i data-lucide="home"></i><span id="navHomeText">मुख्य पृष्ठ</span>
+        <i data-lucide="home"></i><span id="navHomeText"></span>
       </button>
       <button class="nav-item" id="navAddService" onclick="switchTab('addService')">
-        <i data-lucide="plus-circle"></i><span id="navAddText">पोस्ट करें</span>
+        <i data-lucide="plus-circle"></i><span id="navAddText"></span>
       </button>
       <button class="nav-item" id="navChatTab" onclick="switchTab('chat')">
-        <i data-lucide="message-square"></i><span id="navChatText">चैट</span>
+        <i data-lucide="message-square"></i><span id="navChatText"></span>
       </button>
       <button class="nav-item" id="navSupport" onclick="switchTab('support')">
-        <i data-lucide="help-circle"></i><span id="navSupportText">सहायता</span>
+        <i data-lucide="help-circle"></i><span id="navSupportText"></span>
       </button>
     </nav>
   </div>
 
-  <!-- Google Login Modal -->
   <div id="joinModal" class="modal-overlay">
     <div class="modal-card">
-      <div style="font-weight:800; font-size:1.1rem; text-align:center;" id="modalWelcome">RUVESTRA में आपका स्वागत है</div>
-      <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:12px; text-align:center;" id="modalSub">Google खाते से लॉगिन करें:</div>
+      <div style="font-weight:800; font-size:1.1rem; text-align:center;" id="modalWelcome"></div>
+      <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:12px; text-align:center;" id="modalSub"></div>
       
       <div class="form-group" style="margin-bottom: 12px;">
-        <label id="lblWhoAreYou">आप कौन हैं?</label>
+        <label id="lblWhoAreYou"></label>
         <div class="role-selector">
-          <div class="role-btn active" id="roleCustomer" onclick="selectRole('Customer')">ग्राहक</div>
-          <div class="role-btn" id="roleClient" onclick="selectRole('Client')">सेवा प्रदाता</div>
+          <div class="role-btn active" id="roleCustomer" onclick="selectRole('Customer')"></div>
+          <div class="role-btn" id="roleClient" onclick="selectRole('Client')"></div>
         </div>
       </div>
 
       <div class="service-form">
         <button class="btn-google" onclick="loginWithGoogle()">
           <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
-          Google से साइन-इन करें
+          <span id="lblGoogleSignIn"></span>
         </button>
       </div>
     </div>
   </div>
 
-  <div id="toast" class="toast">कार्य संपन्न हुआ</div>
+  <div id="toast" class="toast"></div>
 
   <script>
     const firebaseConfig = {
@@ -409,6 +392,7 @@
     let selectedFilterCategoryIndex = 0;
     let services = JSON.parse(localStorage.getItem("ruvestra_services") || "[]");
     let blockedUsers = JSON.parse(localStorage.getItem("ruvestra_blocked") || "[]");
+    let currentChatTarget = "";
 
     const defaultAvatar = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100&q=80";
 
@@ -446,7 +430,28 @@
         supportMsg: "अपनी समस्या विस्तार से लिखें",
         btnSupportSubmit: "शिकायत ईमेल द्वारा भेजें",
         deletePost: "डिटेल हटाएं",
-        blockUserBtn: "ब्लॉक करें"
+        blockUserBtn: "ब्लॉक करें",
+        chatTitle: "चैट विंडो",
+        audioCall: "ऑडियो कॉल",
+        videoCall: "वीडियो कॉल",
+        chatWelcomeMsg: "नमस्ते! आप इस चैट के माध्यम से बात कर सकते हैं।",
+        msgInputPlaceholder: "संदेश लिखें...",
+        sendBtn: "भेजें",
+        googleSignIn: "Google से साइन-इन करें",
+        namePlaceholder: "अपना नाम लिखें",
+        msgPlaceholder: "यहाँ अपनी शिकायत या सुझाव लिखें...",
+        optLogin: "लॉगिन की समस्या",
+        optService: "सेवा से जुड़ी शिकायत",
+        optOther: "अन्य सहायता",
+        loginSuccess: "Google से लॉगिन सफल!",
+        audioCallAlert: "ऑडियो कॉल शुरू हो रही है...",
+        videoCallAlert: "वीडियो कॉल शुरू हो रही है...",
+        fillSupportAlert: "कृपया अपनी समस्या विवरण में लिखें।",
+        deleteConfirm: "क्या आप वाकई इस पोस्ट को हटाना चाहते हैं?",
+        deleteSuccess: "पोस्ट सफलतापूर्वक हटा दी गई!",
+        onlyOwnDelete: "आप केवल अपनी खुद की पोस्ट डिलीट कर सकते हैं!",
+        blockConfirm: "क्या आप वाकई इस यूजर को ब्लॉक करना चाहते हैं? इसकी सभी पोस्ट छिप जाएंगी।",
+        blockSuccess: "यूजर सफलतापूर्वक ब्लॉक कर दिया गया!"
       },
       en: {
         joinApp: "Join App",
@@ -481,7 +486,28 @@
         supportMsg: "Describe your issue",
         btnSupportSubmit: "Send Complaint via Email",
         deletePost: "Delete",
-        blockUserBtn: "Block"
+        blockUserBtn: "Block",
+        chatTitle: "Chat Window",
+        audioCall: "Audio Call",
+        videoCall: "Video Call",
+        chatWelcomeMsg: "Hello! You can start chatting here.",
+        msgInputPlaceholder: "Type a message...",
+        sendBtn: "Send",
+        googleSignIn: "Sign in with Google",
+        namePlaceholder: "Write your name",
+        msgPlaceholder: "Write your feedback or issue here...",
+        optLogin: "Login Error",
+        optService: "Service Issue",
+        optOther: "Other Support",
+        loginSuccess: "Google Login Successful!",
+        audioCallAlert: "Initiating Audio Call...",
+        videoCallAlert: "Initiating Video Call...",
+        fillSupportAlert: "Please write your issue in detail.",
+        deleteConfirm: "Are you sure you want to delete this post?",
+        deleteSuccess: "Post deleted successfully!",
+        onlyOwnDelete: "You can only delete your own posts!",
+        blockConfirm: "Are you sure you want to block this user? All their posts will be hidden.",
+        blockSuccess: "User blocked successfully!"
       }
     };
 
@@ -508,6 +534,7 @@
     }
 
     function completeLogin(lat, lon) {
+      const t = translations[currentLang];
       const provider = new firebase.auth.GoogleAuthProvider();
       firebase.auth().signInWithPopup(provider)
         .then((result) => {
@@ -524,25 +551,26 @@
           
           checkUserJoinStatus();
           renderServices();
-          showToast("Google से लॉगिन सफल!");
+          showToast(t.loginSuccess);
         })
         .catch((error) => {
-          alert("लॉगिन में समस्या आई: " + error.message);
+          alert("Error: " + error.message);
         });
     }
 
     function submitSupportRequest() {
+      const t = translations[currentLang];
       const name = document.getElementById("supportNameInput").value.trim() || (activeUser ? activeUser.name : 'User');
       const issue = document.getElementById("supportIssueType").value;
       const msg = document.getElementById("supportMsgInput").value.trim();
 
       if (!msg) {
-        alert("कृपया अपनी समस्या विवरण में लिखें।");
+        alert(t.fillSupportAlert);
         return;
       }
 
       const subject = encodeURIComponent(`[RUVESTRA Help] ${issue} - ${name}`);
-      const body = encodeURIComponent(`नाम: ${name}\nईमेल: ${activeUser ? activeUser.email : 'Not Logged In'}\nसमस्या प्रकार: ${issue}\n\nविवरण:\n${msg}`);
+      const body = encodeURIComponent(`Name: ${name}\nEmail: ${activeUser ? activeUser.email : 'Not Logged In'}\nIssue: ${issue}\n\nDetails:\n${msg}`);
 
       window.location.href = `mailto:${adminEmail}?subject=${subject}&body=${body}`;
     }
@@ -562,6 +590,10 @@
       renderCategoryFilters();
       checkUserJoinStatus();
       renderServices();
+      
+      if (currentChatTarget) {
+        document.getElementById("activeChatTitle").innerText = `${translations[currentLang].chatTitle}: ${currentChatTarget}`;
+      }
     }
 
     function applyLanguage() {
@@ -572,6 +604,7 @@
       document.getElementById("lblSrvTitle").innerText = t.srvTitle;
       document.getElementById("srvTitle").placeholder = t.titlePlaceholder;
       document.getElementById("lblSrvCat").innerText = t.srvCat;
+      document.getElementById("btnListNow").innerText = t.listNow;
       document.getElementById("navHomeText").innerText = t.navHome;
       document.getElementById("navAddText").innerText = t.navAdd;
       document.getElementById("navChatText").innerText = t.navChat;
@@ -587,6 +620,22 @@
       document.getElementById("lblSupportIssue").innerText = t.supportIssue;
       document.getElementById("lblSupportMsg").innerText = t.supportMsg;
       document.getElementById("btnSubmitSupport").innerText = t.btnSupportSubmit;
+      
+      if (!currentChatTarget) {
+        document.getElementById("activeChatTitle").innerText = t.chatTitle;
+      }
+      document.getElementById("lblAudioCall").innerText = t.audioCall;
+      document.getElementById("lblVideoCall").innerText = t.videoCall;
+      document.getElementById("chatWelcomeMsg").innerText = t.chatWelcomeMsg;
+      document.getElementById("chatMessageInput").placeholder = t.msgInputPlaceholder;
+      document.getElementById("btnSendMsg").innerText = t.sendBtn;
+      document.getElementById("lblGoogleSignIn").innerText = t.googleSignIn;
+      document.getElementById("supportNameInput").placeholder = t.namePlaceholder;
+      document.getElementById("supportMsgInput").placeholder = t.msgPlaceholder;
+
+      document.getElementById("optLoginError").innerText = t.optLogin;
+      document.getElementById("optServiceIssue").innerText = t.optService;
+      document.getElementById("optOtherIssue").innerText = t.optOther;
     }
 
     function renderCategoryFilters() {
@@ -664,10 +713,11 @@
     }
 
     function openChatWithUser(userName) {
-      document.getElementById("activeChatTitle").innerText = "चैट: " + userName;
+      const t = translations[currentLang];
+      currentChatTarget = userName;
+      document.getElementById("activeChatTitle").innerText = `${t.chatTitle}: ${userName}`;
       switchTab('chat');
       
-      // Automatic Focus on chat input & auto scroll to latest message
       setTimeout(() => {
         const inputField = document.getElementById("chatMessageInput");
         const msgArea = document.getElementById("chatMessagesArea");
@@ -682,11 +732,13 @@
     }
 
     function startAudioCall() {
-      alert("ऑडियो कॉल शुरू हो रही है... (In-chat Audio Call initiated)");
+      const t = translations[currentLang];
+      alert(t.audioCallAlert);
     }
 
     function startVideoCall() {
-      alert("वीडियो कॉल शुरू हो रही है... (In-chat Video Call initiated)");
+      const t = translations[currentLang];
+      alert(t.videoCallAlert);
     }
 
     function sendChatMessage() {
@@ -717,7 +769,7 @@
         role: activeUser.role,
         name: title,
         catIndex: catIndex,
-        phone: "9999999999", // Default dummy since phone input is removed
+        phone: "9999999999",
         photo: activeUser.photo || defaultAvatar,
         latitude: activeUser.latitude || null,
         longitude: activeUser.longitude || null
@@ -734,27 +786,29 @@
     }
 
     function deletePost(postId, postUserEmail) {
+      const t = translations[currentLang];
       if (!activeUser || (activeUser.email !== postUserEmail && activeUser.email !== adminEmail)) {
-        alert("आप केवल अपनी खुद की पोस्ट डिलीट कर सकते हैं!");
+        alert(t.onlyOwnDelete);
         return;
       }
 
-      if (confirm("क्या आप वाकई इस पोस्ट को हटाना चाहते हैं?")) {
+      if (confirm(t.deleteConfirm)) {
         services = services.filter(s => s.id !== postId);
         localStorage.setItem("ruvestra_services", JSON.stringify(services));
         renderServices();
-        showToast("पोस्ट सफलतापूर्वक हटा दी गई!");
+        showToast(t.deleteSuccess);
       }
     }
 
     function blockUser(userEmail) {
-      if (!confirm("क्या आप वाकई इस यूजर को ब्लॉक करना चाहते हैं? इसकी सभी पोस्ट छिप जाएंगी।")) return;
+      const t = translations[currentLang];
+      if (!confirm(t.blockConfirm)) return;
       
       if (!blockedUsers.includes(userEmail)) {
         blockedUsers.push(userEmail);
         localStorage.setItem("ruvestra_blocked", JSON.stringify(blockedUsers));
         renderServices();
-        showToast("यूजर सफलतापूर्वक ब्लॉक कर दिया गया!");
+        showToast(t.blockSuccess);
       }
     }
 
