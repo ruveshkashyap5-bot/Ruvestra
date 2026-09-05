@@ -3,7 +3,7 @@
 <head>
   <meta name="monetag" content="fd15f7cd09a820a04c7614701d8c6a23">
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   
   <title>RUVESTRA — Premium Local Services & Jobs</title>
   <meta name="title" content="RUVESTRA — Premium Local Services & Jobs">
@@ -60,23 +60,26 @@
     }
 
     .header {
-      background-color: var(--bg-surface); padding: 12px 16px; position: sticky; top: 0; z-index: 40;
-      border-bottom: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 10px; flex-shrink: 0;
+      background-color: var(--bg-surface); padding: 10px 12px; position: sticky; top: 0; z-index: 40;
+      border-bottom: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 8px; flex-shrink: 0;
     }
 
-    .header-top { display: flex; justify-content: space-between; align-items: center; }
-    .brand-logo { font-weight: 800; font-size: 1.3rem; color: var(--primary); }
+    /* Fixed Header Overlap issue for Mobile View/APK */
+    .header-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; width: 100%; }
+    .brand-logo { font-weight: 800; font-size: 1.15rem; color: var(--primary); white-space: nowrap; flex-shrink: 0; }
     .brand-logo span { color: var(--primary-accent); }
 
-    .header-controls { display: flex; align-items: center; gap: 8px; }
-    .lang-select { padding: 4px 8px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); background: var(--bg-elevated); font-size: 0.75rem; font-weight: 600; outline: none; }
+    .header-controls { display: flex; align-items: center; gap: 6px; flex-shrink: 1; min-width: 0; overflow: hidden; }
+    .lang-select { padding: 4px 6px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); background: var(--bg-elevated); font-size: 0.7rem; font-weight: 600; outline: none; flex-shrink: 0; }
 
     .user-badge {
-      display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px;
+      display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px;
       background-color: var(--bg-elevated); color: var(--text-main); border: 1px solid var(--border-color);
-      border-radius: var(--radius-full); font-size: 0.75rem; font-weight: 600; cursor: pointer;
+      border-radius: var(--radius-full); font-size: 0.7rem; font-weight: 600; cursor: pointer;
+      max-width: 180px; overflow: hidden; white-space: nowrap; flex-shrink: 1;
     }
-    .user-avatar { width: 22px; height: 22px; border-radius: 50%; object-fit: cover; }
+    .user-badge span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .user-avatar { width: 20px; height: 20px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
 
     .search-box {
       display: flex; align-items: center; gap: 8px; background: var(--bg-elevated);
@@ -113,10 +116,10 @@
 
     .service-card { background-color: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 14px; display: flex; flex-direction: column; gap: 10px; position: relative; }
     .card-header { display: flex; align-items: center; gap: 10px; justify-content: space-between; }
-    .card-user-info { display: flex; align-items: center; gap: 10px; }
-    .card-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border-color); }
+    .card-user-info { display: flex; align-items: center; gap: 10px; min-width: 0; }
+    .card-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border-color); flex-shrink: 0; }
     
-    .card-actions-top { display: flex; gap: 6px; }
+    .card-actions-top { display: flex; gap: 6px; flex-shrink: 0; }
     .btn-delete { background: #fee2e2; color: #dc2626; border: none; padding: 6px 10px; border-radius: var(--radius-sm); font-size: 0.75rem; font-weight: 700; cursor: pointer; }
     .btn-block { background: #fef3c7; color: #d97706; border: none; padding: 6px 10px; border-radius: var(--radius-sm); font-size: 0.75rem; font-weight: 700; cursor: pointer; }
 
@@ -182,7 +185,7 @@
             <option value="en">English</option>
           </select>
           <button id="userBadge" class="user-badge" onclick="openJoinModal()">
-            <i data-lucide="user" id="defaultUserIcon" style="width:14px;"></i>
+            <i data-lucide="user" id="defaultUserIcon" style="width:14px; height:14px;"></i>
             <img id="badgeAvatar" class="user-avatar" style="display:none;" />
             <span id="userBadgeText"></span>
           </button>
@@ -190,7 +193,7 @@
       </div>
 
       <div class="search-box">
-        <i data-lucide="search" style="width:16px; color:var(--text-muted);"></i>
+        <i data-lucide="search" style="width:16px; height:16px; color:var(--text-muted);"></i>
         <input type="text" id="searchInput" oninput="handleSearch()">
       </div>
 
@@ -228,10 +231,10 @@
           </div>
           <div class="chat-actions-group">
             <button class="btn-in-chat-call" onclick="startAudioCall()">
-              <i data-lucide="phone" style="width:12px;"></i> <span id="lblAudioCall"></span>
+              <i data-lucide="phone" style="width:12px; height:12px;"></i> <span id="lblAudioCall"></span>
             </button>
             <button class="btn-in-chat-video" onclick="startVideoCall()">
-              <i data-lucide="video" style="width:12px;"></i> <span id="lblVideoCall"></span>
+              <i data-lucide="video" style="width:12px; height:12px;"></i> <span id="lblVideoCall"></span>
             </button>
           </div>
         </div>
@@ -511,6 +514,12 @@
       }
     };
 
+    function refreshIcons() {
+      if (typeof lucide !== 'undefined' && lucide.createIcons) {
+        lucide.createIcons();
+      }
+    }
+
     document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("langSelect").value = currentLang;
       applyLanguage();
@@ -518,7 +527,8 @@
       renderCategoryFilters();
       checkUserJoinStatus();
       renderServices();
-      lucide.createIcons();
+      refreshIcons();
+      setTimeout(refreshIcons, 500); // APK webview fallback for icon rendering
     });
 
     function loginWithGoogle() {
@@ -710,6 +720,7 @@
         document.getElementById("viewSupport").classList.add("active");
         document.getElementById("navSupport").classList.add("active");
       }
+      refreshIcons();
     }
 
     function openChatWithUser(userName) {
@@ -854,9 +865,9 @@
             <div class="card-header">
               <div class="card-user-info">
                 <img src="${s.photo || defaultAvatar}" class="card-avatar" />
-                <div>
-                  <div style="font-size:0.8rem; font-weight:800; color:var(--text-main);">${s.userName || 'User'}</div>
-                  <div style="font-size:0.7rem; font-weight:700; color:var(--primary-accent);">${categoryLabel} • ${roleLabel}</div>
+                <div style="min-width:0;">
+                  <div style="font-size:0.8rem; font-weight:800; color:var(--text-main); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${s.userName || 'User'}</div>
+                  <div style="font-size:0.7rem; font-weight:700; color:var(--primary-accent); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${categoryLabel} • ${roleLabel}</div>
                 </div>
               </div>
               <div class="card-actions-top">
@@ -869,13 +880,13 @@
             
             <div class="contact-actions" style="margin-top: 6px;">
               <button onclick="openChatWithUser('${s.userName || 'User'}')" class="btn-contact">
-                <i data-lucide="message-square" style="width:14px;"></i> ${t.chatBtn}
+                <i data-lucide="message-square" style="width:14px; height:14px;"></i> ${t.chatBtn}
               </button>
             </div>
           </div>
         `;
       }).join('');
-      lucide.createIcons();
+      refreshIcons();
     }
 
     function showToast(msg) {
